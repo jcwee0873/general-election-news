@@ -1,0 +1,149 @@
+{
+  "naver_cafe": {
+      "body_tag": {
+          "txt": [
+              ["div", {"class": "se-main-container"}],
+              ["div", {"class": "ArticleContentBox"}]
+          ],
+          "wrt_dttm": [
+              ["span", {"class": "date"}]
+          ]
+      },
+      "comment_tag": {
+          "rply_table": [
+              ["ul", {"class": "comment_list"}]
+          ],
+          "rply_list": ["li", {"class": "CommentItem"}],
+          "rply": ["span", {"class": "text_comment"}],
+          "wrt_pers": ["a", {"class": "comment_nickname"}],
+          "wrt_dt": ["span", {"class": "comment_info_date"}]
+      }
+  },
+  "kakao_cafe": {
+      "body_tag": {
+          "txt": [
+              ["div", {"class": "bbs_contents"}]
+          ],
+          "wrt_dttm": [
+              ["span", {"class": "txt_item"}]
+          ]
+      },
+      "comment_tag":  {
+          "rply_table": [
+              ["ul", {"class": "list_comment"}]
+          ],
+          "rply_list": ["div", {"class": "comment_info"}],
+          "rply": ["span", {"class": "original_comment"}],
+          "wrt_pers": ["a", {"class": "txt_name"}],
+          "wrt_dt": ["span", {"class": "txt_date"}]
+      }
+  },
+  "bobaedream": {
+      "board_url": "https://www.bobaedream.co.kr/list?code=politic&s_cate=&maker_no=&model_no=&or_gu=10&or_se=desc&s_selday=&pagescale=30&info3=&noticeShow=&s_select=&s_key=&level_no=&vdate=&type=list&page={page}",
+      "list_base": "https://www.bobaedream.co.kr",
+      "list_tag": {"class": "bsubject", "href": "re.compile('code=politic&No=[0-9]+&bm=1')"},
+      "body_tag": {
+          "ttle": [["strong", {"itemprop": "name"}]],
+          "txt": [["div", {"class": "bodyCont"}]],
+          "wrt_dttm": [
+              ["span", {"class": "countGroup"}]
+          ]
+      },
+      "comment_tag": {
+          "rply_table": [
+              ["ul", {"id": "cmt_reply"}]
+          ],
+          "rply_list": ["li", {}],
+          "rply": ["dd", {"id": "re.compile('small_cmt')"}],
+          "wrt_pers": ["span", {"class": "name"}],
+          "wrt_dt": ["span", {"class": "date"}]
+      }
+  },
+  "mlbpark": {
+      "board_url": "https://mlbpark.donga.com/mp/b.php?p={page}&m=search&b=bullpen&query=%EC%A0%95%EC%B9%98&select=spf&user=",
+      "list_base": "",
+      "list_tag": {"class": "txt"},
+      "body_tag": {
+          "ttle": [["div", {"class": "titles"}]],
+          "txt": [["div", {"class": "ar_txt"}]],
+          "wrt_dttm": [
+              ["span", {"class": "val"}]
+          ]
+      },
+      "comment_tag": {
+          "rply_table": [
+              ["div", {"class": "reply_list"}]
+          ],
+          "rply_list": ["div", {"class": "txt"}],
+          "rply": ["span", {"class": "re_txt"}],
+          "wrt_pers": ["span", {"class": "name"}],
+          "wrt_dt": ["span", {"class": "date"}]
+      }
+  },
+  "82cook": {
+      "board_url": "https://www.82cook.com/entiz/enti.php?bn=15&page={page}",
+      "list_base": "https://www.82cook.com/entiz/",
+      "list_tag": {"class": "None", "href": "re.compile('read')", "title": "None"},
+      "body_tag": {
+          "ttle": [
+            ["span", {"itemprop": "name"}],
+            ["h4", {"class": "title"}]
+          ],
+          "txt": [["div", {"id": "articleBody"}]],
+          "wrt_dttm": [
+              ["div", {"class": "readRight"}]
+          ]
+      },
+      "comment_tag": {
+          "rply_table": [
+              ["ul", {"class": "reples"}]
+          ],
+          "rply_list": ["li", {"class": "rp"}],
+          "rply": ["p", {}],
+          "wrt_pers": ["strong", {}],
+          "wrt_dt": ["em", {}]
+      }
+  },
+  "fmkorea": {
+      "board_url": "https://www.fmkorea.com/index.php?mid=politics&page={page}",
+      "list_base": "https://www.fmkorea.com",
+      "list_tag": {"class": "None", "href": "re.compile('/[0-9]+')"},
+      "body_tag": {
+          "ttle": [["h1", {"class": "np_18px"}]],
+          "txt": [["article", {"class": "None"}]],
+          "wrt_dttm": [
+              ["span", {"class": "date m_no"}]
+          ]
+      },
+      "comment_tag": {
+          "rply_table": [
+              ["ul", {"class": "fdb_lst_ul"}]
+          ],
+          "rply_list": ["li", {"class": "fdb_itm"}],
+          "rply": ["div", {"class": "re.compile('comment_')"}],
+          "wrt_pers": ["a", {"class": "re.compile('member_')"}],
+          "wrt_dt": ["span", {"class": "date"}]
+      }
+  },
+  "ppomppu": {
+      "board_url": "https://www.ppomppu.co.kr/zboard/zboard.php?id=issue&page={page}&divpage=109",
+      "list_base": "https://www.ppomppu.co.kr/zboard/",
+      "list_tag": {"class": "None", "href": "re.compile('&divpage=109&no=[0-9]+')"},
+      "body_tag": {
+          "ttle": [["font", {"class": "view_title2"}]],
+          "txt":[["td", {"class": "board-contents"}]],
+          "wrt_dttm": [
+              ["div", {"class": "sub-top-text-box"}]
+          ]
+      },
+      "comment_tag": {
+          "rply_table": [
+              ["div", {"id": "quote"}]
+          ],
+          "rply_list": ["div", {"class": "comment_wrapper"}],
+          "rply": ["div", {"id": "re.compile('commentContent_')"}],
+          "wrt_pers": ["b", {}],
+          "wrt_dt": ["font", {"class": "eng-day"}]
+      }
+  }
+}
