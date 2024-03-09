@@ -4,99 +4,99 @@ import copy
 import requests
 import numpy as np
 import pandas as pd 
-from .config import ScrapConfig
+
+from .scrap_config import ScrapConfig
 
 
-
-class CommunityParser:
-    def __init__(self):
-        self.config = ScrapConfig()
-
-
-    def board_url(self, target: str, page: int = 1):
-        page = 30 * (page - 1) + 1 if target == 'mlbpark' else page
-        url = self.config.config[target].get('board_url').format(page=page)
-
-        return url
+# class CommunityParser:
+#     def __init__(self):
+#         self.config = ScrapConfig()
 
 
-    def article_list(self, tags: bs4.element.Tag, target: str) -> list:
-        base = self.config.config[target]['list_base']
-        list_tags = tags.find_all("a", self.config.config[target]['list_tag'])
-        urls = [
-            base + tag.get('href', '').replace('amp;', '')
-            for tag in list_tags
-        ]
+#     def board_url(self, target: str, page: int = 1):
+#         page = 30 * (page - 1) + 1 if target == 'mlbpark' else page
+#         url = self.config.config[target].get('board_url').format(page=page)
 
-        return list(set(urls))
+#         return url
+
+
+#     def article_list(self, tags: bs4.element.Tag, target: str) -> list:
+#         base = self.config.config[target]['list_base']
+#         list_tags = tags.find_all("a", self.config.config[target]['list_tag'])
+#         urls = [
+#             base + tag.get('href', '').replace('amp;', '')
+#             for tag in list_tags
+#         ]
+
+#         return list(set(urls))
     
-    def decompose_tags(self,
-        tags: bs4.element.Tag,
-        decompose_list: list = [
-            'img'
-        ]
-    ):
-        for decompose_tag in decompose_list:
-            for t in tags.find_all(decompose_tag):
-                t.decompose()
+#     def decompose_tags(self,
+#         tags: bs4.element.Tag,
+#         decompose_list: list = [
+#             'img'
+#         ]
+#     ):
+#         for decompose_tag in decompose_list:
+#             for t in tags.find_all(decompose_tag):
+#                 t.decompose()
 
 
-    def body(self, tags: bs4.element.Tag, target: str) -> dict:
-        self.decompose_tags(tags)
-        selectors = self.config.config[target].get('body_tag')
+#     def body(self, tags: bs4.element.Tag, target: str) -> dict:
+#         self.decompose_tags(tags)
+#         selectors = self.config.config[target].get('body_tag')
 
-        result = {}
-        for key, selector in selectors.items():
-            result[key] = []
+#         result = {}
+#         for key, selector in selectors.items():
+#             result[key] = []
 
-            for s in selector:
-                tag, attr = s
-                result[key] = tags.find_all(tag, attr)
-                if len(result[key]) > 0: break
+#             for s in selector:
+#                 tag, attr = s
+#                 result[key] = tags.find_all(tag, attr)
+#                 if len(result[key]) > 0: break
             
-            if len(result[key]) > 0:
-                txt = ''
-                for t in result[key]:
-                    txt += '\n' + t.text
-                result[key] = txt.strip()
+#             if len(result[key]) > 0:
+#                 txt = ''
+#                 for t in result[key]:
+#                     txt += '\n' + t.text
+#                 result[key] = txt.strip()
 
-            else:
-                result[key] = ''
+#             else:
+#                 result[key] = ''
         
-        return result
+#         return result
 
 
-    def comments(self, tags: bs4.element.Tag, target: str) -> list:
-        self.decompose_tags(tags)
-        selectors = self.config.config[target]['comment_tag']['rply_table']
-        for selector in selectors:
-            if len(selector) == 0: break
+#     def comments(self, tags: bs4.element.Tag, target: str) -> list:
+#         self.decompose_tags(tags)
+#         selectors = self.config.config[target]['comment_tag']['rply_table']
+#         for selector in selectors:
+#             if len(selector) == 0: break
                 
-            rply_table = tags.find(selector[0], selector[1])
+#             rply_table = tags.find(selector[0], selector[1])
             
-            if rply_table: break
+#             if rply_table: break
 
-        if not rply_table: return []
+#         if not rply_table: return []
 
-        list_selectors = self.config.config[target]['comment_tag']['rply_list']
-        rply_selectors = self.config.config[target]['comment_tag']['rply']
-        replies = rply_table.find_all(list_selectors[0], list_selectors[1])
+#         list_selectors = self.config.config[target]['comment_tag']['rply_list']
+#         rply_selectors = self.config.config[target]['comment_tag']['rply']
+#         replies = rply_table.find_all(list_selectors[0], list_selectors[1])
 
-        comments = []
-        for reply in replies:
-            comment = reply.find_all(rply_selectors[0], rply_selectors[1])
-            for c in comment:
-                comments.append(c.text.strip())
+#         comments = []
+#         for reply in replies:
+#             comment = reply.find_all(rply_selectors[0], rply_selectors[1])
+#             for c in comment:
+#                 comments.append(c.text.strip())
 
-        return comments
+#         return comments
         
 
-    def date(self, text: str):
-        form = re.compile('[0-9]{2,4}[\.-]?[0-9]{2}[\.-]?[0-9]{2}[\.]?[\(월화수목금토일\)]{0,3} [0-9].:[0-9].')
-        date = form.findall(text.replace('\xa0', ''))[0]
-        remove_day = re.compile('\([월화수목금토일]\)')
-        date = remove_day.sub('', date)
-        return pd.to_datetime(date)
+#     def date(self, text: str):
+#         form = re.compile('[0-9]{2,4}[\.-]?[0-9]{2}[\.-]?[0-9]{2}[\.]?[\(월화수목금토일\)]{0,3} [0-9].:[0-9].')
+#         date = form.findall(text.replace('\xa0', ''))[0]
+#         remove_day = re.compile('\([월화수목금토일]\)')
+#         date = remove_day.sub('', date)
+#         return pd.to_datetime(date)
 
 
 class TextDensity:
@@ -214,6 +214,7 @@ class TextDensity:
         return np.log(top) / np.log(bottom)
     
     def calc_density(self, CTD=False, decompose=False):
+        text = ''
         max_score = 0
         max_text = None
         
