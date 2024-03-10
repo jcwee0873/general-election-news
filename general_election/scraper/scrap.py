@@ -12,12 +12,25 @@ KST = pendulum.timezone("Asia/Seoul")
 WWW_COMPILE = re.compile(r'http(s)?://([a-z]+)\.([a-z0-9-]+)\.(co.kr|kr|com|net|[a-z]+)')
 
 RPLY_SELECTOR = {
-    "reply": ["span", {"class": "u_cbox_contents"}],
+    "rply": ["span", {"class": "u_cbox_contents"}],
     "writer": ["span", {"class": "u_cbox_nick"}],
-    "wrt_dttm": ["span", {"class": "u_cbox_date"}],
-    "agr_cnt": ["em", {"class": "u_cbox_cnt_recomm"}],
-    "disagr_cnt": ["em", {"class": "u_cbox_cnt_unrecomm"}]
+    "written_at": ["span", {"class": "u_cbox_date"}],
+    "agree_cnt": ["em", {"class": "u_cbox_cnt_recomm"}],
+    "disagree_cnt": ["em", {"class": "u_cbox_cnt_unrecomm"}]
 }
+
+
+def eliminate_something(d):
+    try:
+        if pd.isnull(d): return 'NULL'
+        if len(d) == 0: return 'NULL'
+        d = str(d).replace('\'', '"').replace(':', '\\:')
+        d = d.replace('<b>', '').replace('</b>', '').replace('&apos;', '').replace('&quot;', '').replace('\u200b', ' ').replace('\xa0', '')
+        return f"'{d}'"
+    
+    except:
+        return 'NULL'
+    
 
 def news_reply_scrap(
     rply_url: str,
@@ -26,7 +39,7 @@ def news_reply_scrap(
     driver = CustomWebDriver(headless=headless)
 
     driver.get(rply_url)
-    time.sleep(8)
+    time.sleep(5)
 
     try:
         button = driver.find_element(By.CLASS_NAME, 'u_cbox_btn_more')
@@ -49,12 +62,12 @@ def news_reply_scrap(
         try:
             for key, value in RPLY_SELECTOR.items():
                 temp[key] = rply_source.find(value[0], value[1]).get_text()
-            temp['wrt_dttm'] = pd.to_datetime(temp['wrt_dttm']).strftime('%Y%m%d%H%M%S') 
-            temp['scrap_dttm'] = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            temp['written_at'] = pd.to_datetime(temp['written_at']).strftime('%Y%m%d%H%M%S') 
             result.append(temp)
         except AttributeError:
             continue
     
+    driver._kill_driver()
     return result
 
 

@@ -2,13 +2,12 @@
 
 CREATE TABLE news (
     news_id                 VARCHAR(50),
-    pvdr_cd                 INTEGER,
+    pvdr_cd                 VARCHAR(50),
     media_cd                INTEGER,
     title                   TEXT,
     summary                 TEXT,
     text                    TEXT,
-    publish_dt            VARCHAR(8),
-    publish_tm            VARCHAR(6),
+    published_at            VARCHAR(14),
     origin_url              VARCHAR(500),
     naver_url               VARCHAR(500),
     created_at              VARCHAR(14)      DEFAUlT TO_CHAR(NOW(), 'YYYYMMDDHH24MISS'),
@@ -17,3 +16,4 @@ CREATE TABLE news (
     CONSTRAINT news_pk PRIMARY KEY (news_id)
 );
 
+CREATE INDEX news_pub_at_idx ON news (published_at);

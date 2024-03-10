@@ -1,4 +1,4 @@
--- DROP TABLE news_scrap;
+DROP TABLE news_scrap;
 
 CREATE TABLE news_scrap (
     collect_no              INTEGER,
@@ -7,8 +7,7 @@ CREATE TABLE news_scrap (
     title                   TEXT,
     summary                 TEXT,
     text                    TEXT,
-    publish_date            VARCHAR(8),
-    publish_time            VARCHAR(6),
+    published_at            VARCHAR(14),
     origin_url              VARCHAR(500),
     naver_url               VARCHAR(500),
     created_at              VARCHAR(14)      DEFAUlT TO_CHAR(NOW(), 'YYYYMMDDHH24MISS'),
@@ -16,3 +15,5 @@ CREATE TABLE news_scrap (
     deleted_at              VARCHAR(14),
     CONSTRAINT news_scrap_pk PRIMARY KEY (collect_no, scrap_no)
 );
+
+CREATE INDEX news_scrap_dt_idx ON news_scrap (published_at);

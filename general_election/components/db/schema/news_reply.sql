@@ -2,13 +2,12 @@
 
 CREATE TABLE news_reply (
     news_id         VARCHAR(50),
-    pvdr_cd         INTEGER,
     rply_no         INTEGER,
     rply            TEXT,
     writer          VARCHAR(200),
     agree_cnt       INTEGER,
     disagree_cnt    INTEGER,
-    write_datetime  VARCHAR(14),
+    written_at      VARCHAR(14),
     created_at      VARCHAR(14),
     updated_at      VARCHAR(14),
     deleted_at      VARCHAR(14),

@@ -1,6 +1,9 @@
 import os
 import re
 from dotenv import load_dotenv
+from opensearchpy import OpenSearch
+
+load_dotenv('/home/jcwee/Documents/src/.env')
 
 import sqlalchemy
 import pandas as pd
@@ -42,3 +45,20 @@ class PostgresqlEngine:
             res = conn.execute(text(sql))
 
             return res
+        
+
+
+class OpenSearchEngine:
+    def __init__(self):
+        hosts = os.environ.get('OPENSEARCH_HOST').split(',')
+        hosts = [{'host': h, 'port': os.environ.get('OPENSEARCH_POSRT')} for h in hosts]
+
+        self.client = OpenSearch(
+            hosts=hosts,
+            http_auth=(os.environ.get('OPENSEARCH_USER'), os.environ.get('OPENSEARCH_PASSWORD')),
+            ssl_assert_hostname=False,
+            ssl_show_warn=False,
+        )
+
+
+    

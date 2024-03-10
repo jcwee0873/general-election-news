@@ -8,11 +8,11 @@ from selenium.webdriver.edge.service import Service
 
 
 class CustomWebDriver:
-    def __init__(self, headless=False):
+    def __init__(self, headless=True):
         self.headless = headless
 
         os_system = platform.system()
-        driver_path = os.path.abspath(os.path.join(os.getcwd(), './scraper/drivers'))
+        driver_path = os.path.abspath(os.path.join(os.getcwd(), './general_election/scraper/driver'))
         driver_fn = 'msedgedriver.exe' if os_system == 'Windows' else 'msedgedriver'
 
         self.driver_location = os.path.abspath(os.path.join(driver_path, './' ,driver_fn))

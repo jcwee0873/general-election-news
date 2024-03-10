@@ -1,0 +1,114 @@
+{
+	"settings": {
+	  "number_of_shards": 3,
+	  "number_of_replicas": 1,
+	  "max_result_window" : 10000,
+	  "index":{
+		  "analysis":{
+			  "tokenizer":{
+				  "nori_mixed":{
+					  "type":"nori_tokenizer",
+					  "decompound_mode":"mixed",
+					  "user_dictionary": "userdict_ko.txt"
+				  },
+				  "nori_none":{
+					  "type":"nori_tokenizer",
+					  "decompound_mode":"none",
+					  "user_dictionary": "userdict_ko.txt"
+				  }
+			  },
+			  "analyzer":{
+				  "kor_mixed":{
+					  "type":"custom",
+					  "tokenizer":"nori_mixed",
+					  "char_filter":["html_strip"],
+					  "filter": [
+						  "synonym",
+						  "nori_posfilter",
+						  "lowercase",
+						  "nori_readingform"
+					  ]
+				  },
+				  "kor_basic": {
+					  "type":"custom",
+					  "tokenizer": "nori_none",
+					  "char_filter": ["html_strip"],
+					  "filter": [
+						  "synonym",
+						  "nori_posfilter",
+						  "lowercase",
+						  "nori_readingform"
+					  ]
+				  }
+			  },
+			  "filter": {
+				  "synonym" : {
+					    "type" : "synonym_graph",
+					    "synonyms_path" : "synonym_dict_ko.txt"
+				  },
+				  "nori_posfilter": {
+					  "type": "nori_part_of_speech",
+					  "stoptags": [
+						  "E", "IC", "J", "MAG", "MAJ", "NA",
+						  "SP", "SSC", "SSO", "SC", "SE", "UNA",
+						  "VSV", "XPN", "XSA", "XSN", "XSV"
+					  ]
+				  }
+			  }
+		  }	
+	  }
+	},
+	"mappings": {
+		"properties": {
+			"id": {
+				"type": "keyword"
+			},
+			"news_id": {
+				"type": "keyword"
+			},
+			"media_cd": {
+				"type": "keyword"
+			},
+			"media_name": {
+				"type": "keyword"
+			},
+			"title": {
+				"type": "text",
+				"analyzer": "kor_mixed",
+				"search_analyzer": "kor_basic"
+			},
+			"timestamp":{
+				"type": "date"
+			},
+			"pvdr_cd": {
+				"type": "keyword"
+			},
+			"text":{
+				"type": "text",
+				"analyzer": "kor_mixed",
+				"search_analyzer": "kor_basic"
+			},
+			"summary":{
+				"type": "keyword"
+			},
+			"origin_url":{
+				"type": "keyword",
+				"index": false
+			},
+			"naver_url":{
+				"type": "keyword",
+				"index": false
+			}
+		},
+		"dynamic_templates": [
+		  {
+			"unspecified_fields_as_keyword": {
+			  "match_mapping_type": "*",
+			  "mapping": {
+				"type": "keyword"
+			  }
+			}
+		  }
+		]
+	}
+}

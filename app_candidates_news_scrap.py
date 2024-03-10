@@ -11,6 +11,7 @@ load_dotenv('/home/jcwee/Documents/src/.env')
 
 
 from general_election.scraper.parser import TextDensity
+from general_election.scraper.scrap import eliminate_something
 from general_election.scraper.url_loader import naver_url_load
 from general_election.database.database import PostgresqlEngine
 from general_election.database.sql import *
@@ -67,17 +68,6 @@ def scrap_news_body(url: str, text_density: bool = False) -> str:
     return body_tag.text.strip()
 
 
-def eliminate_something(d):
-    try:
-        if pd.isnull(d): return 'NULL'
-        if len(d) == 0: return 'NULL'
-        d = str(d).replace('\'', '"').replace(':', '\\:')
-        d = d.replace('<b>', '').replace('</b>', '').replace('&apos;', '').replace('&quot;', '').replace('\u200b', ' ').replace('\xa0', '')
-        return f"'{d}'"
-    
-    except:
-        return 'NULL'
-
 
 def scrap_news(row: dict):
     date = pd.to_datetime(row['pubDate'])
@@ -87,8 +77,7 @@ def scrap_news(row: dict):
         'origin_url': row['originallink'] if row['originallink'] != '' else row['link'],
         'naver_url': row['link'],
         'summary': row['description'],
-        'publish_date': date.strftime('%Y%m%d'),
-        'publish_time': date.strftime('%H%M%S'),
+        'published_at': date.strftime('%Y%m%d%H%M%S')
     }
 
     url = result['origin_url']
@@ -110,6 +99,8 @@ def scrap_news(row: dict):
     result['domain_name'] = media
 
     if 'news.naver' in url:
+        time.sleep(0.7)
+
         text = scrap_news_body(url, text_density=False)
     else:
         text = scrap_news_body(url, text_density=True)
@@ -155,8 +146,6 @@ def scrap_process(row: pd.Series):
         result['collect_no'] = collect_no
 
         insert_data(result)
-
-        time.sleep(0.7)
 
 
 def main():
