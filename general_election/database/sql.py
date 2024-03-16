@@ -149,3 +149,24 @@ INSERT_NEWS_REPLY_VAL = """
     '{written_at}'
 )
 """
+
+
+SELECT_CANDIDATE_ANALYZE_TARGET = """
+SELECT
+    province,
+    city,
+    district,
+    election_dist,
+    political_party,
+    candidate_nm,
+    candidate_title
+FROM
+    candidate_scrap_target
+WHERE
+    TO_CHAR(NOW(), 'YYYYMMDD') <= election_day
+    AND candidate_title IS NOT NULL
+ORDER BY
+    candidate_nm
+ASC
+;
+"""

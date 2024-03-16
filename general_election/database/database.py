@@ -1,7 +1,7 @@
 import os
 import re
 from dotenv import load_dotenv
-from opensearchpy import OpenSearch
+from opensearchpy import OpenSearch, helpers
 
 load_dotenv('/home/jcwee/Documents/src/.env')
 
@@ -59,6 +59,20 @@ class OpenSearchEngine:
             ssl_assert_hostname=False,
             ssl_show_warn=False,
         )
+
+    def insert_analysis_result(self, data):
+        try:
+            actions = [{
+                '_op_type': 'index',
+                '_index': 'analyzed_news',
+                '_id': data['id'],
+                '_source': data
+            }]
+            
+            result = helpers.bulk(self.client, actions=actions)
+            
+        except Exception as e:
+            print(e)
 
 
     
