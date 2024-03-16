@@ -1,0 +1,103 @@
+{
+    "settings": {
+        "number_of_shards": 3,
+        "number_of_replicas": 1,
+        "index":{
+            "analysis":{
+                "tokenizer":{
+                    "nori_mixed":{
+                        "type":"nori_tokenizer",
+                        "decompound_mode":"mixed",
+                        "filter": ["nori_readingform", "html_strip"],
+                        "user_dictionary": "userdict_ko.txt"
+                    },
+                    "nori_none":{
+                        "type":"nori_tokenizer",
+                        "decompound_mode":"none",
+                        "user_dictionary": "userdict_ko.txt"
+                    }
+                },
+                "analyzer":{
+                    "kor_mixed":{
+                        "type":"custom",
+                        "tokenizer":"nori_mixed",
+                        "char_filter":["html_strip"],
+                        "filter": [
+                            "synonym"
+                        ]
+                    },
+                    "kor_basic": {
+                        "type":"custom",
+                        "tokenizer": "nori_none",
+                        "char_filter": ["html_strip"],
+                        "filter": [
+                            "synonym"
+                        ]
+                    }
+                },
+                "filter": {
+                    "synonym" : {
+                        "type" : "synonym_graph",
+                        "synonyms_path" : "synonym_dict_ko.txt"
+                    },
+          				  "nori_posfilter": {
+          					  "type": "nori_part_of_speech",
+          					  "stoptags": [
+          						  "E", "IC", "J", "MAG", "MAJ", "NA",
+          						  "SP", "SSC", "SSO", "SC", "SE", "UNA",
+          						  "VSV", "XPN", "XSA", "XSN", "XSV"
+          					  ]
+          				  }
+                }
+            }	
+        }
+    },
+    "mappings": {
+        "properties": {
+            "id": {
+                "type": "keyword"
+            },
+            "news_id": {
+                "type": "keyword"
+            },
+            "timestamp": {
+                "type": "keyword"
+            },
+            "province": {
+              "type": "keyword"
+            },
+            "city": {
+              "type": "keyword"
+            },
+            "district": {
+              "type": "keyword"
+            },
+            "election_dist": {
+              "type": "keyword"
+            },
+            "political_party": {
+              "type": "keyword"
+            },
+            "candidate_nm": {
+              "type": "keyword"
+            },
+            "analysis_result": {
+                "type": "nested",
+                "properties": {
+                    "sentence": {
+                        "type": "text",
+                        "analyzer": "kor_mixed",
+                        "search_analyzer": "kor_basic"
+                    },
+                    "sentiment": {
+                        "type": "keyword"
+                    },
+                    "vectors": {
+                        "type": "knn_vector",
+                        "dimension": 1536
+                    }
+                }
+            }
+        }
+    }
+}
